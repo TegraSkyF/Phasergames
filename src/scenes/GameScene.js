@@ -77,18 +77,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   clearTimers() {
-    if (this.startDelay) {
-      this.startDelay.remove(false);
-      this.startDelay = null;
-    }
-    if (this.moveEvent) {
-      this.moveEvent.remove(false);
-      this.moveEvent = null;
-    }
-    if (this.gameOverTimer) {
-      this.gameOverTimer.remove(false);
-      this.gameOverTimer = null;
-    }
+    this.time.removeAllEvents();
+    this.startDelay = null;
+    this.moveEvent = null;
   }
 
   scheduleMoveLoop() {
@@ -282,16 +273,9 @@ export class GameScene extends Phaser.Scene {
     if (!this.alive) return;
     this.alive = false;
     this.canMove = false;
-    if (this.moveEvent) {
-      this.moveEvent.remove(false);
-      this.moveEvent = null;
-    }
-    this.cameras.main.flash(180, 255, 77, 61);
-    this.gameOverTimer = this.time.delayedCall(220, () => {
-      this.gameOverTimer = null;
-      if (this.scene.isActive("game")) {
-        this.scene.start("gameover", { score: this.score });
-      }
-    });
+    this.clearTimers();
+    this.cameras.main.flash(120, 255, 77, 61);
+    // Switch immediately so a stale delayed callback cannot reopen gameover after restart
+    this.scene.start("gameover", { score: this.score });
   }
 }

@@ -40,7 +40,8 @@ export class GameScene extends Phaser.Scene {
       { x: 6, y: 9 },
       { x: 7, y: 9 },
     ];
-    this.food = { x: 12, y: 9 };
+    // First apple sits off the starting lane so the player must turn
+    this.food = { x: 11, y: 5 };
 
     this.drawBoard();
     this.boardGfx = this.add.graphics();

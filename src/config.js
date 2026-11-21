@@ -8,10 +8,10 @@ export const BOARD_SIZE = COLS * CELL;
 export const BOARD_OFFSET_X = (GAME_WIDTH - BOARD_SIZE) / 2;
 export const BOARD_OFFSET_Y = 120;
 
-export const START_INTERVAL_MS = 190;
-export const MIN_INTERVAL_MS = 80;
+export const START_INTERVAL_MS = 200;
+export const MIN_INTERVAL_MS = 85;
 export const SPEED_STEP_MS = 5;
-export const START_DELAY_MS = 450;
+export const START_DELAY_MS = 500;
 
 export const COLORS = {
   board: 0xdff8ea,

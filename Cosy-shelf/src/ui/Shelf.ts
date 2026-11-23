@@ -22,16 +22,17 @@ export class Shelf extends Phaser.GameObjects.Container {
 
     const width = data.slots * 90 + 20;
     const height = 150;
+    this.setPosition(x - width / 2, y - height / 2);
 
     const bg = scene.add.graphics();
     bg.fillStyle(0xd9c7a8, 1);
     bg.lineStyle(3, 0xb89b72, 1);
-    bg.fillRoundedRect(-width / 2, -height / 2, width, height, 18);
-    bg.strokeRoundedRect(-width / 2, -height / 2, width, height, 18);
+    bg.fillRoundedRect(0, 0, width, height, 18);
+    bg.strokeRoundedRect(0, 0, width, height, 18);
     this.add(bg);
 
     const caption = scene.add
-      .text(0, -height / 2 + 18, data.accepts, {
+      .text(width / 2, 18, data.accepts, {
         fontFamily: "Georgia, serif",
         fontSize: "16px",
         color: "#5a4632",
@@ -42,13 +43,12 @@ export class Shelf extends Phaser.GameObjects.Container {
 
     for (let i = 0; i < data.slots; i += 1) {
       this.slotPositions.push({
-        x: -width / 2 + 10 + 45 + i * 90,
-        y: 16,
+        x: 10 + 45 + i * 90,
+        y: height / 2 + 8,
       });
     }
 
     this.setSize(width, height);
-    this.setOrigin(0.5);
     this.setInteractive({ dropZone: true });
     scene.add.existing(this);
   }

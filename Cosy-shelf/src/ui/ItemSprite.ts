@@ -37,9 +37,17 @@ export class ItemSprite extends Phaser.GameObjects.Container {
     this.add(label);
 
     this.setSize(80, 100);
-    this.setOrigin(0.5);
-    this.setInteractive({ draggable: true, useHandCursor: true });
+    this.setInteractive({
+      hitArea: new Phaser.Geom.Rectangle(-40, -50, 80, 100),
+      hitAreaCallback: Phaser.Geom.Rectangle.Contains,
+      draggable: true,
+      useHandCursor: true,
+    });
     scene.add.existing(this);
+  }
+
+  getDropBounds(): Phaser.Geom.Rectangle {
+    return new Phaser.Geom.Rectangle(this.x - 40, this.y - 50, 80, 100);
   }
 
   resetToHome(x: number = this.homeX, y: number = this.homeY): void {

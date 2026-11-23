@@ -118,7 +118,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    const itemBounds = gameObject.getBounds();
+    const itemBounds = gameObject.getDropBounds();
 
     let dropped = false;
     for (const shelf of this.shelves) {

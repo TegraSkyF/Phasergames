@@ -10,6 +10,9 @@ export interface ShelfData {
 const DROP_PADDING = 72;
 
 export class Shelf extends Phaser.GameObjects.Container {
+  static readonly HEIGHT = 150;
+  static readonly MIN_WIDTH = 200;
+
   readonly accepts: string;
   readonly slots: number;
   items: ItemSprite[] = [];
@@ -18,13 +21,23 @@ export class Shelf extends Phaser.GameObjects.Container {
   private readonly shelfHeight: number;
   private readonly slotPositions: Array<{ x: number; y: number }> = [];
 
-  constructor(scene: Phaser.Scene, x: number, y: number, data: ShelfData) {
+  static naturalWidth(slots: number): number {
+    return slots * 90 + 20;
+  }
+
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    data: ShelfData,
+    width?: number,
+  ) {
     super(scene, x, y);
 
     this.accepts = data.accepts;
     this.slots = data.slots;
-    this.shelfWidth = data.slots * 90 + 20;
-    this.shelfHeight = 150;
+    this.shelfWidth = width ?? Shelf.naturalWidth(data.slots);
+    this.shelfHeight = Shelf.HEIGHT;
     this.setPosition(x - this.shelfWidth / 2, y - this.shelfHeight / 2);
 
     const bg = scene.add.graphics();
@@ -44,9 +57,10 @@ export class Shelf extends Phaser.GameObjects.Container {
       .setAlpha(0.55);
     this.add(caption);
 
+    const slotPitch = (this.shelfWidth - 20) / data.slots;
     for (let i = 0; i < data.slots; i += 1) {
       this.slotPositions.push({
-        x: 10 + 45 + i * 90,
+        x: 10 + slotPitch / 2 + i * slotPitch,
         y: this.shelfHeight / 2 + 8,
       });
     }

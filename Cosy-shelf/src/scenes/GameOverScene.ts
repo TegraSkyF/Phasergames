@@ -1,15 +1,21 @@
 import Phaser from "phaser";
 
 export class GameOverScene extends Phaser.Scene {
+  private levelIndex = 0;
+
   constructor() {
     super({ key: "GameOver" });
+  }
+
+  init(data?: { levelIndex?: number }): void {
+    this.levelIndex = data?.levelIndex ?? 0;
   }
 
   create(): void {
     const { width, height } = this.scale;
 
     this.add
-      .text(width / 2, height / 2 - 140, "Game Over", {
+      .text(width / 2, height / 2 - 140, "Уровень пройден!", {
         fontFamily: "Georgia, serif",
         fontSize: "48px",
         color: "#f4efe6",
@@ -28,7 +34,7 @@ export class GameOverScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     retry.on("pointerup", () => {
-      this.scene.start("Game");
+      this.scene.start("Game", { levelIndex: this.levelIndex ?? 0 });
     });
 
     const menu = this.add

@@ -1,16 +1,7 @@
 import Phaser from "phaser";
-import { TEST_LEVEL } from "../data/testLevel";
 import type { PlatformGateway } from "../platform/PlatformGateway";
+import { LevelManager, type LevelConfig } from "../systems/LevelManager";
 import { ItemSprite, Shelf } from "../ui";
-
-const ITEM_STARTS: Array<{ x: number; y: number }> = [
-  { x: 140, y: 320 },
-  { x: 300, y: 360 },
-  { x: 460, y: 310 },
-  { x: 580, y: 400 },
-  { x: 180, y: 480 },
-  { x: 420, y: 500 },
-];
 
 export class GameScene extends Phaser.Scene {
   private items: ItemSprite[] = [];
@@ -18,35 +9,66 @@ export class GameScene extends Phaser.Scene {
   private draggedItem: ItemSprite | null = null;
   private dragOffset = { x: 0, y: 0 };
   private levelComplete = false;
+  private levelIndex = 0;
+  private level: LevelConfig | null = null;
 
   constructor() {
     super({ key: "Game" });
   }
 
+  init(data?: { levelIndex?: number }): void {
+    this.levelIndex = data?.levelIndex ?? 0;
+  }
+
   create(): void {
+    this.items = [];
+    this.shelves = [];
+    this.draggedItem = null;
+    this.levelComplete = false;
+    this.input.enabled = true;
+
+    console.log(this.levelIndex);
+
     const gateway = this.registry.get("gateway") as PlatformGateway;
     gateway.gameplayStart();
+
+    this.level = new LevelManager().getLevel(this.levelIndex);
+    if (!this.level) {
+      console.error(`Level not found: ${this.levelIndex}`);
+      gateway.gameplayStop();
+      this.scene.start("Menu");
+      return;
+    }
 
     const bg = this.add.graphics();
     bg.fillStyle(0xf5ebda, 1);
     bg.fillRect(0, 0, 720, 1280);
 
     this.add
-      .text(360, 72, "Уровень 1", {
+      .text(360, 72, `Уровень ${this.level.id}`, {
         fontFamily: "Georgia, serif",
         fontSize: "32px",
         color: "#5A4632",
       })
       .setOrigin(0.5);
 
-    this.shelves = [
-      new Shelf(this, 200, 1000, TEST_LEVEL.shelves[0]),
-      new Shelf(this, 520, 1000, TEST_LEVEL.shelves[1]),
-    ];
+    const shelfCount = this.level.shelves.length;
+    const shelfY = 1000;
+    this.shelves = this.level.shelves.map((shelfData, index) => {
+      const shelfX = (720 * (index + 0.5)) / shelfCount;
+      return new Shelf(this, shelfX, shelfY, shelfData);
+    });
 
-    this.items = TEST_LEVEL.items.map((data, index) => {
-      const start = ITEM_STARTS[index];
-      const item = new ItemSprite(this, start.x, start.y, data);
+    const cols = 3;
+    const startY = 350;
+    const rowGap = 140;
+    const colGap = 180;
+    this.items = this.level.items.map((itemData, index) => {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      const x = 720 / 2 + (col - (cols - 1) / 2) * colGap;
+      const y = startY + row * rowGap;
+      const item = new ItemSprite(this, x, y, itemData);
       this.input.setDraggable(item);
       item.enableGrab();
       return item;
@@ -168,7 +190,7 @@ export class GameScene extends Phaser.Scene {
     gateway?.gameplayStop();
 
     this.time.delayedCall(400, () => {
-      this.scene.start("GameOver");
+      this.scene.start("GameOver", { levelIndex: this.levelIndex });
     });
   }
 

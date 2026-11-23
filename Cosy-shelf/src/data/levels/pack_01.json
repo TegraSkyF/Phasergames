@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "id": 1,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        { "id": "l1-r1", "tag": "red", "label": "R1", "color": 14710870 },
+        { "id": "l1-r2", "tag": "red", "label": "R2", "color": 14710870 },
+        { "id": "l1-r3", "tag": "red", "label": "R3", "color": 14710870 },
+        { "id": "l1-b1", "tag": "blue", "label": "B1", "color": 7048863 },
+        { "id": "l1-b2", "tag": "blue", "label": "B2", "color": 7048863 },
+        { "id": "l1-b3", "tag": "blue", "label": "B3", "color": 7048863 }
+      ],
+      "shelves": [
+        { "id": "l1-shelf-red", "accepts": "red", "slots": 3 },
+        { "id": "l1-shelf-blue", "accepts": "blue", "slots": 3 }
+      ]
+    },
+    {
+      "id": 2,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        { "id": "l2-r1", "tag": "red", "label": "R1", "color": 14710870 },
+        { "id": "l2-r2", "tag": "red", "label": "R2", "color": 14710870 },
+        { "id": "l2-r3", "tag": "red", "label": "R3", "color": 14710870 },
+        { "id": "l2-r4", "tag": "red", "label": "R4", "color": 14710870 },
+        { "id": "l2-b1", "tag": "blue", "label": "B1", "color": 7048863 },
+        { "id": "l2-b2", "tag": "blue", "label": "B2", "color": 7048863 },
+        { "id": "l2-b3", "tag": "blue", "label": "B3", "color": 7048863 },
+        { "id": "l2-b4", "tag": "blue", "label": "B4", "color": 7048863 }
+      ],
+      "shelves": [
+        { "id": "l2-shelf-red", "accepts": "red", "slots": 4 },
+        { "id": "l2-shelf-blue", "accepts": "blue", "slots": 4 }
+      ]
+    },
+    {
+      "id": 3,
+      "chapter": 1,
+      "rule": "type",
+      "items": [
+        { "id": "l3-book-1", "tag": "book", "label": "B1", "color": 10908754 },
+        { "id": "l3-book-2", "tag": "book", "label": "B2", "color": 10908754 },
+        { "id": "l3-book-3", "tag": "book", "label": "B3", "color": 10908754 },
+        { "id": "l3-cup-1", "tag": "cup", "label": "C1", "color": 7048863 },
+        { "id": "l3-cup-2", "tag": "cup", "label": "C2", "color": 7048863 },
+        { "id": "l3-cup-3", "tag": "cup", "label": "C3", "color": 7048863 },
+        { "id": "l3-plant-1", "tag": "plant", "label": "P1", "color": 9414774 },
+        { "id": "l3-plant-2", "tag": "plant", "label": "P2", "color": 9414774 },
+        { "id": "l3-plant-3", "tag": "plant", "label": "P3", "color": 9414774 }
+      ],
+      "shelves": [
+        { "id": "l3-shelf-book", "accepts": "book", "slots": 3 },
+        { "id": "l3-shelf-cup", "accepts": "cup", "slots": 3 },
+        { "id": "l3-shelf-plant", "accepts": "plant", "slots": 3 }
+      ]
+    }
+  ]
+}

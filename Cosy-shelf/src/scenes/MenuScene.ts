@@ -28,7 +28,7 @@ export class MenuScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true });
 
     play.on("pointerup", () => {
-      this.scene.start("Game");
+      this.scene.start("Game", { levelIndex: 0 });
     });
   }
 }

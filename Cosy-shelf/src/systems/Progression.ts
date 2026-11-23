@@ -1,17 +1,35 @@
-import type { PlatformGateway } from "../platform/PlatformGateway";
+import type { Save, SaveData } from "./Save";
 
 export class Progression {
-  constructor(private readonly gateway: PlatformGateway) {}
+  private data: SaveData = { stars: {}, unlockedMaxIndex: 0 };
 
-  getCurrentLevelId(): string {
-    return "";
+  constructor(private readonly save: Save) {}
+
+  async load(): Promise<void> {
+    this.data = await this.save.loadProgress();
   }
 
-  getStars(_levelId: string): number {
-    return 0;
+  isUnlocked(index: number): boolean {
+    return index <= this.data.unlockedMaxIndex;
   }
 
-  unlockChapter(_chapterId: string): void {}
+  getStars(levelId: number): number {
+    return this.data.stars[String(levelId)] ?? 0;
+  }
 
-  recordLevelComplete(_levelId: string, _stars: number): void {}
+  getUnlockedMaxIndex(): number {
+    return this.data.unlockedMaxIndex;
+  }
+
+  async recordLevelComplete(
+    levelId: number,
+    index: number,
+    stars: number,
+  ): Promise<void> {
+    const key = String(levelId);
+    const previous = this.data.stars[key] ?? 0;
+    this.data.stars[key] = Math.max(previous, stars);
+    this.data.unlockedMaxIndex = Math.max(this.data.unlockedMaxIndex, index + 1);
+    await this.save.saveProgress(this.data);
+  }
 }

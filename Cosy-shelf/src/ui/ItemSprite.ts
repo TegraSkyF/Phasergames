@@ -3,19 +3,18 @@ import Phaser from "phaser";
 export interface ItemData {
   id: string;
   tag: string;
-  label: string;
-  color: number;
+  sprite?: string;
 }
 
 export class ItemSprite extends Phaser.GameObjects.Container {
-  static readonly WIDTH = 80;
+  static readonly WIDTH = 100;
   static readonly HEIGHT = 100;
 
   readonly id: string;
   readonly tag: string;
 
-  private readonly homeX: number;
-  private readonly homeY: number;
+  private homeX: number;
+  private homeY: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, data: ItemData) {
     super(scene, x - ItemSprite.WIDTH / 2, y - ItemSprite.HEIGHT / 2);
@@ -26,15 +25,19 @@ export class ItemSprite extends Phaser.GameObjects.Container {
     this.homeY = this.y;
 
     const bg = scene.add.graphics();
-    bg.fillStyle(data.color, 1);
-    bg.fillRoundedRect(0, 0, ItemSprite.WIDTH, ItemSprite.HEIGHT, 14);
+    bg.fillStyle(0xe8dcc0, 0.9);
+    bg.lineStyle(3, 0x5a4632, 1);
+    bg.fillCircle(50, 50, 46);
+    bg.strokeCircle(50, 50, 46);
     this.add(bg);
 
     const label = scene.add
-      .text(ItemSprite.WIDTH / 2, ItemSprite.HEIGHT / 2, data.label, {
+      .text(50, 50, data.tag.toUpperCase(), {
         fontFamily: "Georgia, serif",
-        fontSize: "20px",
-        color: "#000000",
+        fontSize: "16px",
+        color: "#5A4632",
+        align: "center",
+        wordWrap: { width: 80 },
       })
       .setOrigin(0.5);
     this.add(label);
@@ -50,6 +53,21 @@ export class ItemSprite extends Phaser.GameObjects.Container {
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
       draggable: true,
       useHandCursor: true,
+    });
+  }
+
+  setHome(x: number, y: number): void {
+    this.homeX = x;
+    this.homeY = y;
+  }
+
+  playPickup(): void {
+    this.scene.tweens.killTweensOf(this);
+    this.scene.tweens.add({
+      targets: this,
+      scale: 1.1,
+      duration: 100,
+      ease: "Sine.easeOut",
     });
   }
 

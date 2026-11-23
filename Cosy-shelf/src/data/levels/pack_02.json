@@ -1,0 +1,865 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "id": 11,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l11-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l11-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l11-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l11-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l11-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l11-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l11-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l11-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l11-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l11-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l11-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        },
+        {
+          "id": "l11-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l11-shelf-plant",
+          "accepts": "plant",
+          "slots": 2
+        },
+        {
+          "id": "l11-shelf-box",
+          "accepts": "box",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l12-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l12-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l12-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l12-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l12-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l12-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l12-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l12-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l12-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l12-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l12-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l12-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        },
+        {
+          "id": "l12-shelf-box",
+          "accepts": "box",
+          "slots": 2
+        },
+        {
+          "id": "l12-shelf-book",
+          "accepts": "book",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l13-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l13-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l13-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l13-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l13-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l13-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l13-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l13-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l13-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l13-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l13-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l13-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l13-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        },
+        {
+          "id": "l13-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l13-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        },
+        {
+          "id": "l13-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l14-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l14-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l14-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l14-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l14-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l14-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l14-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l14-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l14-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l14-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l14-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l14-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        },
+        {
+          "id": "l14-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l14-shelf-plant",
+          "accepts": "plant",
+          "slots": 1
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l15-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l15-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l15-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l15-book-4",
+          "tag": "book",
+          "sprite": "book_4"
+        },
+        {
+          "id": "l15-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l15-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l15-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l15-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l15-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l15-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l15-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l15-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l15-shelf-book",
+          "accepts": "book",
+          "slots": 4
+        },
+        {
+          "id": "l15-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l15-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        },
+        {
+          "id": "l15-shelf-box",
+          "accepts": "box",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l16-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l16-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l16-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l16-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l16-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l16-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l16-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l16-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l16-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l16-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l16-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l16-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l16-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l16-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        },
+        {
+          "id": "l16-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l16-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l17-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l17-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l17-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l17-plant-4",
+          "tag": "plant",
+          "sprite": "plant_4"
+        },
+        {
+          "id": "l17-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l17-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l17-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l17-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l17-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l17-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l17-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l17-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l17-shelf-plant",
+          "accepts": "plant",
+          "slots": 4
+        },
+        {
+          "id": "l17-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l17-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        },
+        {
+          "id": "l17-shelf-cup",
+          "accepts": "cup",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l18-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l18-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l18-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l18-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l18-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l18-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l18-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l18-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l18-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l18-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l18-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l18-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l18-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l18-shelf-book",
+          "accepts": "book",
+          "slots": 3
+        },
+        {
+          "id": "l18-shelf-cup",
+          "accepts": "cup",
+          "slots": 3
+        },
+        {
+          "id": "l18-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l19-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l19-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        },
+        {
+          "id": "l19-book-3",
+          "tag": "book",
+          "sprite": "book_3"
+        },
+        {
+          "id": "l19-book-4",
+          "tag": "book",
+          "sprite": "book_4"
+        },
+        {
+          "id": "l19-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l19-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l19-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l19-cup-4",
+          "tag": "cup",
+          "sprite": "cup_4"
+        },
+        {
+          "id": "l19-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l19-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l19-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l19-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l19-shelf-book",
+          "accepts": "book",
+          "slots": 4
+        },
+        {
+          "id": "l19-shelf-cup",
+          "accepts": "cup",
+          "slots": 4
+        },
+        {
+          "id": "l19-shelf-plant",
+          "accepts": "plant",
+          "slots": 2
+        },
+        {
+          "id": "l19-shelf-box",
+          "accepts": "box",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "chapter": 2,
+      "rule": "type",
+      "items": [
+        {
+          "id": "l20-cup-1",
+          "tag": "cup",
+          "sprite": "cup_1"
+        },
+        {
+          "id": "l20-cup-2",
+          "tag": "cup",
+          "sprite": "cup_2"
+        },
+        {
+          "id": "l20-cup-3",
+          "tag": "cup",
+          "sprite": "cup_3"
+        },
+        {
+          "id": "l20-cup-4",
+          "tag": "cup",
+          "sprite": "cup_4"
+        },
+        {
+          "id": "l20-plant-1",
+          "tag": "plant",
+          "sprite": "plant_1"
+        },
+        {
+          "id": "l20-plant-2",
+          "tag": "plant",
+          "sprite": "plant_2"
+        },
+        {
+          "id": "l20-plant-3",
+          "tag": "plant",
+          "sprite": "plant_3"
+        },
+        {
+          "id": "l20-box-1",
+          "tag": "box",
+          "sprite": "box_1"
+        },
+        {
+          "id": "l20-box-2",
+          "tag": "box",
+          "sprite": "box_2"
+        },
+        {
+          "id": "l20-box-3",
+          "tag": "box",
+          "sprite": "box_3"
+        },
+        {
+          "id": "l20-book-1",
+          "tag": "book",
+          "sprite": "book_1"
+        },
+        {
+          "id": "l20-book-2",
+          "tag": "book",
+          "sprite": "book_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l20-shelf-cup",
+          "accepts": "cup",
+          "slots": 4
+        },
+        {
+          "id": "l20-shelf-plant",
+          "accepts": "plant",
+          "slots": 3
+        },
+        {
+          "id": "l20-shelf-box",
+          "accepts": "box",
+          "slots": 3
+        },
+        {
+          "id": "l20-shelf-book",
+          "accepts": "book",
+          "slots": 2
+        }
+      ]
+    }
+  ]
+}

@@ -68,6 +68,15 @@ export class Shelf extends Phaser.GameObjects.Container {
       y: this.y + slot.y,
       duration: 150,
       ease: "Sine.easeOut",
+      onComplete: () => {
+        this.scene.tweens.add({
+          targets: item,
+          scale: 0.95,
+          duration: 75,
+          yoyo: true,
+          ease: "Sine.easeInOut",
+        });
+      },
     });
     return true;
   }

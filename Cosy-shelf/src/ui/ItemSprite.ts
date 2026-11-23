@@ -42,12 +42,14 @@ export class ItemSprite extends Phaser.GameObjects.Container {
   }
 
   resetToHome(x: number = this.homeX, y: number = this.homeY): void {
+    this.scene.tweens.killTweensOf(this);
     this.scene.tweens.add({
       targets: this,
       x,
       y,
-      duration: 200,
-      ease: "Sine.easeOut",
+      scale: 1,
+      duration: 250,
+      ease: "Back.easeOut",
     });
   }
 }

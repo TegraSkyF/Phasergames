@@ -16,6 +16,7 @@ export class GameScene extends Phaser.Scene {
   private items: ItemSprite[] = [];
   private shelves: Shelf[] = [];
   private draggedItem: ItemSprite | null = null;
+  private dragOffset = { x: 0, y: 0 };
   private levelComplete = false;
 
   constructor() {
@@ -60,7 +61,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private onDragStart(
-    _pointer: Phaser.Input.Pointer,
+    pointer: Phaser.Input.Pointer,
     gameObject: Phaser.GameObjects.GameObject,
   ): void {
     if (!(gameObject instanceof ItemSprite)) {
@@ -83,16 +84,29 @@ export class GameScene extends Phaser.Scene {
 
     gameObject.setDepth(1000);
     this.draggedItem = gameObject;
+    this.dragOffset = {
+      x: gameObject.x - pointer.x,
+      y: gameObject.y - pointer.y,
+    };
+
+    this.tweens.killTweensOf(gameObject);
+    this.tweens.add({
+      targets: gameObject,
+      scale: 1.08,
+      duration: 100,
+      ease: "Sine.easeOut",
+    });
   }
 
   private onDrag(
-    _pointer: Phaser.Input.Pointer,
+    pointer: Phaser.Input.Pointer,
     gameObject: Phaser.GameObjects.GameObject,
-    dragX: number,
-    dragY: number,
   ): void {
     if (gameObject instanceof ItemSprite) {
-      gameObject.setPosition(dragX, dragY);
+      gameObject.setPosition(
+        pointer.x + this.dragOffset.x,
+        pointer.y + this.dragOffset.y,
+      );
     }
   }
 
@@ -115,7 +129,14 @@ export class GameScene extends Phaser.Scene {
     for (const shelf of this.shelves) {
       if (Phaser.Geom.Rectangle.Overlaps(pointerBounds, shelf.getBounds())) {
         dropped = true;
-        if (!shelf.addItem(gameObject)) {
+        if (shelf.addItem(gameObject)) {
+          this.tweens.add({
+            targets: gameObject,
+            scale: 1,
+            duration: 80,
+            ease: "Sine.easeOut",
+          });
+        } else {
           gameObject.resetToHome();
         }
         break;

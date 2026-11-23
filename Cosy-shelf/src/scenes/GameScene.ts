@@ -48,6 +48,7 @@ export class GameScene extends Phaser.Scene {
       const start = ITEM_STARTS[index];
       const item = new ItemSprite(this, start.x, start.y, data);
       this.input.setDraggable(item);
+      item.enableGrab();
       return item;
     });
 
@@ -119,35 +120,31 @@ export class GameScene extends Phaser.Scene {
     }
 
     const itemBounds = gameObject.getDropBounds();
+    let placed = false;
 
-    let dropped = false;
     for (const shelf of this.shelves) {
-      const shelfBounds = shelf.getBounds();
-      const pointerOnShelf = Phaser.Geom.Rectangle.Contains(
-        shelfBounds,
-        pointer.worldX,
-        pointer.worldY,
-      );
-      if (
-        Phaser.Geom.Rectangle.Overlaps(itemBounds, shelfBounds) ||
-        pointerOnShelf
-      ) {
-        dropped = true;
-        if (shelf.addItem(gameObject)) {
-          this.tweens.add({
-            targets: gameObject,
-            scale: 1,
-            duration: 80,
-            ease: "Sine.easeOut",
-          });
-        } else {
-          gameObject.resetToHome();
-        }
+      const dropBounds = shelf.getDropBounds();
+      const hitsShelf =
+        Phaser.Geom.Rectangle.Overlaps(itemBounds, dropBounds) ||
+        Phaser.Geom.Rectangle.Contains(dropBounds, pointer.x, pointer.y);
+
+      if (!hitsShelf) {
+        continue;
+      }
+
+      if (shelf.addItem(gameObject)) {
+        placed = true;
+        this.tweens.add({
+          targets: gameObject,
+          scale: 1,
+          duration: 80,
+          ease: "Sine.easeOut",
+        });
         break;
       }
     }
 
-    if (!dropped) {
+    if (!placed) {
       gameObject.resetToHome();
     }
 

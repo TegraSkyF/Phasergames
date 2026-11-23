@@ -52,6 +52,22 @@ export class GameScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    const exit = this.add
+      .text(680, 72, "Выход", {
+        fontFamily: "Georgia, serif",
+        fontSize: "24px",
+        color: "#5A4632",
+        backgroundColor: "#e7d3b0",
+        padding: { x: 16, y: 8 },
+      })
+      .setOrigin(1, 0.5)
+      .setDepth(2000)
+      .setInteractive({ useHandCursor: true });
+
+    exit.on("pointerup", () => {
+      this.scene.start("Menu");
+    });
+
     const shelfCount = this.level.shelves.length;
     const shelfY = 1000;
     this.shelves = this.level.shelves.map((shelfData, index) => {

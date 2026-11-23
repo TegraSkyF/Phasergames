@@ -118,16 +118,20 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    const pointerBounds = new Phaser.Geom.Rectangle(
-      pointer.worldX - 40,
-      pointer.worldY - 50,
-      80,
-      100,
-    );
+    const itemBounds = gameObject.getBounds();
 
     let dropped = false;
     for (const shelf of this.shelves) {
-      if (Phaser.Geom.Rectangle.Overlaps(pointerBounds, shelf.getBounds())) {
+      const shelfBounds = shelf.getBounds();
+      const pointerOnShelf = Phaser.Geom.Rectangle.Contains(
+        shelfBounds,
+        pointer.worldX,
+        pointer.worldY,
+      );
+      if (
+        Phaser.Geom.Rectangle.Overlaps(itemBounds, shelfBounds) ||
+        pointerOnShelf
+      ) {
         dropped = true;
         if (shelf.addItem(gameObject)) {
           this.tweens.add({

@@ -21,7 +21,7 @@ export class Shelf extends Phaser.GameObjects.Container {
     this.slots = data.slots;
 
     const width = data.slots * 90 + 20;
-    const height = 130;
+    const height = 150;
 
     const bg = scene.add.graphics();
     bg.fillStyle(0xd9c7a8, 1);
@@ -43,11 +43,12 @@ export class Shelf extends Phaser.GameObjects.Container {
     for (let i = 0; i < data.slots; i += 1) {
       this.slotPositions.push({
         x: -width / 2 + 10 + 45 + i * 90,
-        y: 12,
+        y: 16,
       });
     }
 
     this.setSize(width, height);
+    this.setOrigin(0.5);
     this.setInteractive({ dropZone: true });
     scene.add.existing(this);
   }

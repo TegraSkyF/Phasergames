@@ -37,6 +37,7 @@ export class ItemSprite extends Phaser.GameObjects.Container {
     this.add(label);
 
     this.setSize(80, 100);
+    this.setOrigin(0.5);
     this.setInteractive({ draggable: true, useHandCursor: true });
     scene.add.existing(this);
   }

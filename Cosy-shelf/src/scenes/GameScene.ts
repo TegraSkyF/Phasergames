@@ -68,27 +68,7 @@ export class GameScene extends Phaser.Scene {
       this.scene.start("Menu");
     });
 
-    const shelfCount = this.level.shelves.length;
-    const shelfY = 1000;
-    this.shelves = this.level.shelves.map((shelfData, index) => {
-      const shelfX = (720 * (index + 0.5)) / shelfCount;
-      return new Shelf(this, shelfX, shelfY, shelfData);
-    });
-
-    const cols = 3;
-    const startY = 350;
-    const rowGap = 140;
-    const colGap = 180;
-    this.items = this.level.items.map((itemData, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const x = 720 / 2 + (col - (cols - 1) / 2) * colGap;
-      const y = startY + row * rowGap;
-      const item = new ItemSprite(this, x, y, itemData);
-      this.input.setDraggable(item);
-      item.enableGrab();
-      return item;
-    });
+    this.layoutLevel();
 
     this.input.on("dragstart", this.onDragStart, this);
     this.input.on("drag", this.onDrag, this);
@@ -97,6 +77,68 @@ export class GameScene extends Phaser.Scene {
     this.scene.launch("HUDScene");
     this.scene.bringToTop("HUDScene");
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.handleShutdown, this);
+  }
+
+  private layoutLevel(): void {
+    if (!this.level) {
+      return;
+    }
+
+    const gameWidth = 720;
+    const gameHeight = 1280;
+    const edge = 20;
+    const maxRowWidth = gameWidth - edge * 2;
+    const minItemShelfGap = 100;
+    const shelfCount = this.level.shelves.length;
+
+    let shelfWidth = Math.max(
+      ...this.level.shelves.map((shelf) => Shelf.naturalWidth(shelf.slots)),
+    );
+    if (shelfCount * shelfWidth > maxRowWidth) {
+      shelfWidth = Math.max(Shelf.MIN_WIDTH, maxRowWidth / shelfCount);
+    }
+
+    const rowWidth = shelfCount * shelfWidth;
+    const rowLeft = (gameWidth - rowWidth) / 2;
+    const shelfTop = gameHeight - edge - Shelf.HEIGHT;
+    const shelfCenterY = shelfTop + Shelf.HEIGHT / 2;
+
+    this.shelves = this.level.shelves.map((shelfData, index) => {
+      const shelfX = rowLeft + index * shelfWidth + shelfWidth / 2;
+      return new Shelf(this, shelfX, shelfCenterY, shelfData, shelfWidth);
+    });
+
+    const itemCount = this.level.items.length;
+    const cols = itemCount <= 4 ? Math.min(2, itemCount) : Math.min(3, itemCount);
+    const rows = Math.ceil(itemCount / Math.max(cols, 1));
+    const itemAreaTop = 160;
+    const itemAreaBottom = shelfTop - minItemShelfGap;
+    const rowStep =
+      rows <= 1
+        ? 0
+        : Math.min(
+            140,
+            Math.max(
+              ItemSprite.HEIGHT + 16,
+              (itemAreaBottom - itemAreaTop - ItemSprite.HEIGHT) / (rows - 1),
+            ),
+          );
+    const firstCenterY = itemAreaTop + ItemSprite.HEIGHT / 2;
+    const colStep =
+      cols <= 1 ? 0 : Math.min(180, (maxRowWidth - ItemSprite.WIDTH) / (cols - 1));
+    const gridWidth = ItemSprite.WIDTH + (cols - 1) * colStep;
+    const firstCenterX = gameWidth / 2 - gridWidth / 2 + ItemSprite.WIDTH / 2;
+
+    this.items = this.level.items.map((itemData, index) => {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      const x = firstCenterX + col * colStep;
+      const y = firstCenterY + row * rowStep;
+      const item = new ItemSprite(this, x, y, itemData);
+      this.input.setDraggable(item);
+      item.enableGrab();
+      return item;
+    });
   }
 
   private onDragStart(

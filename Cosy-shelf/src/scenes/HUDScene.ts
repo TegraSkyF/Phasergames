@@ -1,132 +1,84 @@
 import Phaser from "phaser";
+import { Button } from "../ui/Button";
+
+function formatClock(seconds: number): string {
+  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const ss = String(seconds % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
+}
 
 export class HUDScene extends Phaser.Scene {
   private levelLabel!: Phaser.GameObjects.Text;
   private timerLabel!: Phaser.GameObjects.Text;
-  private pauseOverlay: Phaser.GameObjects.Container | null = null;
-  private startedAt = 0;
-  private pausedMs = 0;
-  private pauseStartedAt = 0;
-  private isPaused = false;
+  private levelId = 1;
 
   constructor() {
     super({ key: "HUDScene", active: false });
   }
 
-  init(data?: { levelId?: number; startedAt?: number }): void {
-    this.startedAt = data?.startedAt ?? Date.now();
-    this.pausedMs = 0;
-    this.isPaused = false;
-    this.pauseOverlay = null;
-    this.registry.set("hudLevelId", data?.levelId ?? 1);
+  init(data?: { levelId?: number }): void {
+    this.levelId = data?.levelId ?? 1;
   }
 
   create(): void {
-    const levelId = (this.registry.get("hudLevelId") as number | undefined) ?? 1;
-
     const bar = this.add.graphics();
     bar.fillStyle(0xa67c52, 1);
+    bar.fillRect(0, 0, 720, 100);
     bar.lineStyle(3, 0x5a4632, 1);
-    bar.fillRoundedRect(16, 16, 688, 88, 18);
-    bar.strokeRoundedRect(16, 16, 688, 88, 18);
+    bar.beginPath();
+    bar.moveTo(0, 100);
+    bar.lineTo(720, 100);
+    bar.strokePath();
 
     this.levelLabel = this.add
-      .text(40, 60, `Уровень ${levelId}`, {
+      .text(100, 50, `Уровень ${this.levelId}`, {
         fontFamily: "Georgia, serif",
         fontSize: "26px",
-        color: "#f5ebda",
+        fontStyle: "bold",
+        color: "#5A4632",
       })
-      .setOrigin(0, 0.5);
+      .setOrigin(0.5);
 
     this.timerLabel = this.add
-      .text(360, 60, "00:00", {
+      .text(360, 50, "00:00", {
         fontFamily: "Georgia, serif",
-        fontSize: "26px",
-        color: "#f5ebda",
+        fontSize: "32px",
+        fontStyle: "bold",
+        color: "#5A4632",
       })
       .setOrigin(0.5);
 
-    const pause = this.add
-      .text(680, 60, "Пауза", {
-        fontFamily: "Georgia, serif",
-        fontSize: "22px",
-        color: "#5A4632",
-        backgroundColor: "#e8dcc0",
-        padding: { x: 14, y: 8 },
-      })
-      .setOrigin(1, 0.5)
-      .setInteractive({ useHandCursor: true });
-
-    pause.on("pointerup", () => this.togglePause());
-
-    this.time.addEvent({
-      delay: 250,
-      loop: true,
-      callback: () => this.refreshTimer(),
+    new Button(this, 640, 50, 60, 60, "II", 0xe8dcc0, 0x5a4632, () => {
+      this.openPause();
     });
+
+    this.game.events.on("hud-timer", this.onHudTimer, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.handleShutdown, this);
   }
 
-  private refreshTimer(): void {
-    const extra = this.isPaused ? Date.now() - this.pauseStartedAt : 0;
-    const elapsed = Math.max(0, Date.now() - this.startedAt - this.pausedMs - extra);
-    const seconds = Math.floor(elapsed / 1000);
-    const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
-    const ss = String(seconds % 60).padStart(2, "0");
-    this.timerLabel.setText(`${mm}:${ss}`);
+  updateTimer(seconds: number): void {
+    this.timerLabel.setText(formatClock(seconds));
   }
 
-  private togglePause(): void {
-    if (this.isPaused) {
-      this.isPaused = false;
-      this.pausedMs += Date.now() - this.pauseStartedAt;
-      this.scene.resume("Game");
-      this.pauseOverlay?.destroy(true);
-      this.pauseOverlay = null;
+  setLevel(levelId: number): void {
+    this.levelId = levelId;
+    this.levelLabel.setText(`Уровень ${levelId}`);
+  }
+
+  private onHudTimer(seconds: number): void {
+    this.updateTimer(seconds);
+  }
+
+  private openPause(): void {
+    if (this.scene.isActive("PauseScene")) {
       return;
     }
-
-    this.isPaused = true;
-    this.pauseStartedAt = Date.now();
     this.scene.pause("Game");
+    this.scene.launch("PauseScene");
+    this.scene.bringToTop("PauseScene");
+  }
 
-    const overlay = this.add.container(0, 0);
-    const dim = this.add.rectangle(360, 640, 720, 1280, 0x2b241c, 0.55);
-    const panel = this.add
-      .text(360, 560, "Пауза", {
-        fontFamily: "Georgia, serif",
-        fontSize: "48px",
-        color: "#f5ebda",
-      })
-      .setOrigin(0.5);
-    const resume = this.add
-      .text(360, 660, "Продолжить", {
-        fontFamily: "Georgia, serif",
-        fontSize: "28px",
-        color: "#2b241c",
-        backgroundColor: "#e7d3b0",
-        padding: { x: 24, y: 12 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
-    const menu = this.add
-      .text(360, 760, "В меню", {
-        fontFamily: "Georgia, serif",
-        fontSize: "28px",
-        color: "#2b241c",
-        backgroundColor: "#d4c4a8",
-        padding: { x: 24, y: 12 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
-
-    resume.on("pointerup", () => this.togglePause());
-    menu.on("pointerup", () => {
-      this.scene.stop("HUDScene");
-      this.scene.stop("Game");
-      this.scene.start("Menu");
-    });
-
-    overlay.add([dim, panel, resume, menu]);
-    this.pauseOverlay = overlay;
+  private handleShutdown(): void {
+    this.game.events.off("hud-timer", this.onHudTimer, this);
   }
 }

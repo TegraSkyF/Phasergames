@@ -1,5 +1,7 @@
 {
-  "interstitialCooldownMs": 180000,
+  "interstitialCooldownMs": 90000,
+  "interstitialMinLevel": 3,
+  "rewardedCooldownMs": 45000,
   "versions": {
     "levelPacks": []
   }

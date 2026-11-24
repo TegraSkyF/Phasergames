@@ -72,6 +72,7 @@ export class GameScene extends Phaser.Scene {
     this.scene.launch("HUDScene", { levelId: this.level.id });
     this.scene.bringToTop("HUDScene");
     this.game.events.emit("hud-timer", 0);
+    this.game.events.on("use-hint", this.onUseHint, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.handleShutdown, this);
   }
 
@@ -308,7 +309,9 @@ export class GameScene extends Phaser.Scene {
     const stars = this.calcStars();
     const progression = this.registry.get("progression") as Progression | undefined;
     const prevStars = progression?.getStars(this.level.id) ?? 0;
+    const reward = progression?.getLevelReward(this.levelIndex) ?? 0;
     if (progression) {
+      progression.addFeathers(reward);
       await progression.recordLevelComplete(this.level.id, this.levelIndex, stars);
     }
 
@@ -323,7 +326,41 @@ export class GameScene extends Phaser.Scene {
         stars,
         prevStars,
         timeSeconds,
+        reward,
       });
+    });
+  }
+
+  private onUseHint(): void {
+    if (this.levelFinished) {
+      return;
+    }
+    const misplaced = this.items.find((item) => {
+      const shelf = this.shelves.find((candidate) => candidate.items.includes(item));
+      return !shelf || shelf.accepts !== item.tag;
+    });
+    if (!misplaced) {
+      return;
+    }
+    const targetShelf = this.shelves.find((shelf) => shelf.accepts === misplaced.tag);
+    this.pulseHint(misplaced);
+    if (targetShelf) {
+      this.pulseHint(targetShelf);
+    }
+  }
+
+  private pulseHint(target: Phaser.GameObjects.Container): void {
+    this.tweens.killTweensOf(target);
+    target.setAlpha(0.5);
+    this.tweens.add({
+      targets: target,
+      alpha: 1,
+      duration: 250,
+      yoyo: true,
+      repeat: 3,
+      onComplete: () => {
+        target.setAlpha(1);
+      },
     });
   }
 
@@ -337,6 +374,7 @@ export class GameScene extends Phaser.Scene {
     this.input.off("dragstart", this.onDragStart, this);
     this.input.off("drag", this.onDrag, this);
     this.input.off("dragend", this.onDragEnd, this);
+    this.game.events.off("use-hint", this.onUseHint, this);
 
     const gateway = this.registry.get("gateway") as PlatformGateway | undefined;
     gateway?.gameplayStop();

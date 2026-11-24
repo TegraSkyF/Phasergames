@@ -1,5 +1,7 @@
 import Phaser from "phaser";
+import type { Ads } from "../systems/Ads";
 import { LevelManager } from "../systems/LevelManager";
+import type { Progression } from "../systems/Progression";
 import { Button } from "../ui/Button";
 
 function formatClock(seconds: number): string {
@@ -13,6 +15,9 @@ export class GameOverScene extends Phaser.Scene {
   private stars = 1;
   private prevStars = 0;
   private timeSeconds = 0;
+  private reward = 0;
+  private displayedReward = 0;
+  private doubled = false;
 
   constructor() {
     super({ key: "GameOver" });
@@ -23,11 +28,15 @@ export class GameOverScene extends Phaser.Scene {
     stars?: number;
     prevStars?: number;
     timeSeconds?: number;
+    reward?: number;
   }): void {
     this.levelIndex = data?.levelIndex ?? 0;
     this.stars = data?.stars ?? 1;
     this.prevStars = data?.prevStars ?? 0;
     this.timeSeconds = data?.timeSeconds ?? 0;
+    this.reward = data?.reward ?? 0;
+    this.displayedReward = this.reward;
+    this.doubled = false;
   }
 
   create(): void {
@@ -63,7 +72,7 @@ export class GameOverScene extends Phaser.Scene {
 
     if (this.stars > this.prevStars) {
       this.add
-        .text(360, 520, "Новый рекорд!", {
+        .text(360, 500, "Новый рекорд!", {
           fontFamily: "Georgia, serif",
           fontSize: "28px",
           fontStyle: "bold",
@@ -72,19 +81,73 @@ export class GameOverScene extends Phaser.Scene {
         .setOrigin(0.5);
     }
 
+    const rewardLabel = this.add
+      .text(360, 560, this.rewardText(), {
+        fontFamily: "Georgia, serif",
+        fontSize: "26px",
+        fontStyle: "bold",
+        color: "#5A4632",
+      })
+      .setOrigin(0.5);
+
+    const doubleBtn = new Button(
+      this,
+      360,
+      630,
+      360,
+      64,
+      "Удвоить награду",
+      0xe07856,
+      0xf5ebda,
+      () => {
+        void this.tryDoubleReward(rewardLabel, doubleBtn);
+      },
+    );
+
     if (hasNext) {
-      new Button(this, 360, 700, 360, 72, "Дальше", 0xa67c52, 0xf5ebda, () => {
-        this.scene.start("Game", { levelIndex: nextIndex });
+      new Button(this, 360, 740, 360, 72, "Дальше", 0xa67c52, 0xf5ebda, () => {
+        void this.goNext(nextIndex);
       });
     }
 
-    new Button(this, 360, 800, 360, 72, "Ещё раз", 0xe8dcc0, 0x5a4632, () => {
+    new Button(this, 360, 840, 360, 72, "Ещё раз", 0xe8dcc0, 0x5a4632, () => {
       this.scene.start("Game", { levelIndex: this.levelIndex });
     });
 
-    new Button(this, 360, 900, 360, 72, "В меню", 0xd9c7a8, 0x5a4632, () => {
+    new Button(this, 360, 940, 360, 72, "В меню", 0xd9c7a8, 0x5a4632, () => {
       this.scene.start("Menu");
     });
+  }
+
+  private rewardText(): string {
+    return `Награда: ${this.displayedReward} \u{1FAB6}`;
+  }
+
+  private async tryDoubleReward(
+    rewardLabel: Phaser.GameObjects.Text,
+    doubleBtn: Button,
+  ): Promise<void> {
+    if (this.doubled) {
+      return;
+    }
+    const ads = this.registry.get("ads") as Ads | undefined;
+    const success = (await ads?.showRewarded("double_reward")) ?? false;
+    if (!success) {
+      return;
+    }
+    const progression = this.registry.get("progression") as Progression | undefined;
+    progression?.addFeathers(this.reward);
+    this.doubled = true;
+    this.displayedReward = this.reward * 2;
+    rewardLabel.setText(this.rewardText());
+    doubleBtn.disableInteractive();
+    doubleBtn.setVisible(false);
+  }
+
+  private async goNext(nextIndex: number): Promise<void> {
+    const ads = this.registry.get("ads") as Ads | undefined;
+    await ads?.showInterstitial(this.levelIndex);
+    this.scene.start("Game", { levelIndex: nextIndex });
   }
 
   private drawStar(cx: number, cy: number, filled: boolean): void {

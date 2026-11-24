@@ -25,15 +25,15 @@ export class MockAdapter implements PlatformGateway {
   }
 
   async showInterstitial(): Promise<void> {
-    console.log("[MockAdapter] showInterstitial");
+    console.log("MOCK AD: interstitial");
     await delay(AD_DELAY_MS);
-    console.log("[MockAdapter] showInterstitial closed");
+    console.log("MOCK AD: interstitial closed");
   }
 
   async showRewarded(): Promise<boolean> {
-    console.log("[MockAdapter] showRewarded");
+    console.log("MOCK AD: rewarded");
     await delay(AD_DELAY_MS);
-    console.log("[MockAdapter] showRewarded completed, reward granted");
+    console.log("MOCK AD: rewarded completed, reward granted");
     return true;
   }
 

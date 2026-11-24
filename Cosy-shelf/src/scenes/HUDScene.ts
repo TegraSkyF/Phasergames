@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import type { Ads } from "../systems/Ads";
 import { Button } from "../ui/Button";
 
 function formatClock(seconds: number): string {
@@ -48,6 +49,10 @@ export class HUDScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    new Button(this, 250, 50, 100, 60, "Hint", 0xe8dcc0, 0x5a4632, () => {
+      void this.requestHint();
+    });
+
     new Button(this, 640, 50, 60, 60, "II", 0xe8dcc0, 0x5a4632, () => {
       this.openPause();
     });
@@ -67,6 +72,17 @@ export class HUDScene extends Phaser.Scene {
 
   private onHudTimer(seconds: number): void {
     this.updateTimer(seconds);
+  }
+
+  private async requestHint(): Promise<void> {
+    if (this.scene.isActive("PauseScene")) {
+      return;
+    }
+    const ads = this.registry.get("ads") as Ads | undefined;
+    const success = (await ads?.showRewarded("hint")) ?? false;
+    if (success) {
+      this.game.events.emit("use-hint");
+    }
   }
 
   private openPause(): void {

@@ -1,16 +1,26 @@
 import Phaser from "phaser";
 import type { PlatformGateway } from "../platform/PlatformGateway";
 import { LevelManager, type LevelConfig } from "../systems/LevelManager";
-import { ItemSprite, Shelf } from "../ui";
+import type { Progression } from "../systems/Progression";
+import { ItemSprite } from "../ui/ItemSprite";
+import { Shelf } from "../ui/Shelf";
+
+const SHELF_YS = [250, 450, 650, 850];
+const TRAY_Y = 1040;
+const TRAY_HEIGHT = 240;
 
 export class GameScene extends Phaser.Scene {
   private items: ItemSprite[] = [];
   private shelves: Shelf[] = [];
+  private trayItems: ItemSprite[] = [];
+  private moveStack: ItemSprite[] = [];
   private draggedItem: ItemSprite | null = null;
   private dragOffset = { x: 0, y: 0 };
   private levelComplete = false;
+  private failedChecks = 0;
   private levelIndex = 0;
   private level: LevelConfig | null = null;
+  private trayBounds = new Phaser.Geom.Rectangle(0, TRAY_Y, 720, TRAY_HEIGHT);
 
   constructor() {
     super({ key: "Game" });
@@ -23,11 +33,12 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.items = [];
     this.shelves = [];
+    this.trayItems = [];
+    this.moveStack = [];
     this.draggedItem = null;
     this.levelComplete = false;
+    this.failedChecks = 0;
     this.input.enabled = true;
-
-    console.log(this.levelIndex);
 
     const gateway = this.registry.get("gateway") as PlatformGateway;
     gateway.gameplayStart();
@@ -44,124 +55,155 @@ export class GameScene extends Phaser.Scene {
     bg.fillStyle(0xf5ebda, 1);
     bg.fillRect(0, 0, 720, 1280);
 
-    this.add
-      .text(360, 72, `Уровень ${this.level.id}`, {
-        fontFamily: "Georgia, serif",
-        fontSize: "32px",
-        color: "#5A4632",
-      })
-      .setOrigin(0.5);
-
-    const exit = this.add
-      .text(680, 72, "Выход", {
-        fontFamily: "Georgia, serif",
-        fontSize: "24px",
-        color: "#5A4632",
-        backgroundColor: "#e7d3b0",
-        padding: { x: 16, y: 8 },
-      })
-      .setOrigin(1, 0.5)
-      .setDepth(2000)
-      .setInteractive({ useHandCursor: true });
-
-    exit.on("pointerup", () => {
-      this.scene.start("Menu");
-    });
-
-    this.layoutLevel();
+    this.layoutShelves();
+    this.layoutTray();
+    this.spawnItemsInTray();
+    this.createTrayButtons();
 
     this.input.on("dragstart", this.onDragStart, this);
     this.input.on("drag", this.onDrag, this);
     this.input.on("dragend", this.onDragEnd, this);
 
-    this.scene.launch("HUDScene");
+    const startedAt = Date.now();
+    this.scene.launch("HUDScene", {
+      levelId: this.level.id,
+      startedAt,
+    });
     this.scene.bringToTop("HUDScene");
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.handleShutdown, this);
   }
 
-  private layoutLevel(): void {
+  private layoutShelves(): void {
     if (!this.level) {
       return;
     }
-
-    const gameWidth = 720;
-    const gameHeight = 1280;
-    const edge = 20;
-    const maxRowWidth = gameWidth - edge * 2;
-    const minItemShelfGap = 100;
-    const shelfCount = this.level.shelves.length;
-
-    let shelfWidth = Math.max(
-      ...this.level.shelves.map((shelf) => Shelf.naturalWidth(shelf.slots)),
-    );
-    if (shelfCount * shelfWidth > maxRowWidth) {
-      shelfWidth = Math.max(Shelf.MIN_WIDTH, maxRowWidth / shelfCount);
-    }
-
-    const rowWidth = shelfCount * shelfWidth;
-    const rowLeft = (gameWidth - rowWidth) / 2;
-    const shelfTop = gameHeight - edge - Shelf.HEIGHT;
-    const shelfCenterY = shelfTop + Shelf.HEIGHT / 2;
-
     this.shelves = this.level.shelves.map((shelfData, index) => {
-      const shelfX = rowLeft + index * shelfWidth + shelfWidth / 2;
-      return new Shelf(this, shelfX, shelfCenterY, shelfData, shelfWidth);
+      const y = SHELF_YS[index] ?? SHELF_YS[SHELF_YS.length - 1];
+      return new Shelf(this, 360, y, shelfData);
     });
+  }
 
-    const itemCount = this.level.items.length;
-    const cols = itemCount <= 4 ? Math.min(2, itemCount) : Math.min(3, itemCount);
-    const rows = Math.ceil(itemCount / Math.max(cols, 1));
-    const itemAreaTop = 160;
-    const itemAreaBottom = shelfTop - minItemShelfGap;
-    const rowStep =
-      rows <= 1
-        ? 0
-        : Math.min(
-            140,
-            Math.max(
-              ItemSprite.HEIGHT + 16,
-              (itemAreaBottom - itemAreaTop - ItemSprite.HEIGHT) / (rows - 1),
-            ),
-          );
-    const firstCenterY = itemAreaTop + ItemSprite.HEIGHT / 2;
-    const colStep =
-      cols <= 1 ? 0 : Math.min(180, (maxRowWidth - ItemSprite.WIDTH) / (cols - 1));
-    const gridWidth = ItemSprite.WIDTH + (cols - 1) * colStep;
-    const firstCenterX = gameWidth / 2 - gridWidth / 2 + ItemSprite.WIDTH / 2;
+  private layoutTray(): void {
+    const tray = this.add.graphics();
+    tray.fillStyle(0xa67c52, 1);
+    tray.lineStyle(4, 0x5a4632, 1);
+    tray.fillRoundedRect(8, TRAY_Y, 704, TRAY_HEIGHT - 8, 18);
+    tray.strokeRoundedRect(8, TRAY_Y, 704, TRAY_HEIGHT - 8, 18);
+  }
 
+  private traySlotPosition(index: number, total: number): { x: number; y: number } {
+    const cols = Math.min(7, Math.max(1, total));
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    const innerWidth = 500;
+    const startX = 360 - innerWidth / 2 + ItemSprite.WIDTH / 2;
+    const step = cols <= 1 ? 0 : (innerWidth - ItemSprite.WIDTH) / (cols - 1);
+    return {
+      x: startX + col * step,
+      y: TRAY_Y + 52 + row * 92 + ItemSprite.HEIGHT / 2,
+    };
+  }
+
+  private spawnItemsInTray(): void {
+    if (!this.level) {
+      return;
+    }
+    const total = this.level.items.length;
     this.items = this.level.items.map((itemData, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const x = firstCenterX + col * colStep;
-      const y = firstCenterY + row * rowStep;
-      const item = new ItemSprite(this, x, y, itemData);
+      const pos = this.traySlotPosition(index, total);
+      const item = new ItemSprite(this, pos.x, pos.y, itemData);
+      item.setHome(item.x, item.y);
       this.input.setDraggable(item);
       item.enableGrab();
+      this.trayItems.push(item);
       return item;
     });
+  }
+
+  private relayoutTray(): void {
+    this.trayItems.forEach((item, index) => {
+      const pos = this.traySlotPosition(index, this.trayItems.length);
+      const x = pos.x - ItemSprite.WIDTH / 2;
+      const y = pos.y - ItemSprite.HEIGHT / 2;
+      item.setHome(x, y);
+      this.tweens.add({
+        targets: item,
+        x,
+        y,
+        scale: 1,
+        duration: 180,
+        ease: "Sine.easeOut",
+      });
+    });
+  }
+
+  private returnToTray(item: ItemSprite, recordMove: boolean): void {
+    for (const shelf of this.shelves) {
+      shelf.removeItem(item);
+    }
+    if (!this.trayItems.includes(item)) {
+      this.trayItems.push(item);
+    }
+    if (recordMove) {
+      this.moveStack = this.moveStack.filter((moved) => moved !== item);
+    }
+    this.relayoutTray();
+  }
+
+  private createTrayButtons(): void {
+    const undo = this.add
+      .text(28, 1252, "Undo", {
+        fontFamily: "Georgia, serif",
+        fontSize: "24px",
+        color: "#5A4632",
+        backgroundColor: "#e8dcc0",
+        padding: { x: 16, y: 10 },
+      })
+      .setOrigin(0, 0.5)
+      .setDepth(1500)
+      .setInteractive({ useHandCursor: true });
+
+    undo.on("pointerup", () => this.undoLastMove());
+
+    const check = this.add
+      .text(692, 1252, "Check", {
+        fontFamily: "Georgia, serif",
+        fontSize: "24px",
+        color: "#f5ebda",
+        backgroundColor: "#5a8f62",
+        padding: { x: 16, y: 10 },
+      })
+      .setOrigin(1, 0.5)
+      .setDepth(1500)
+      .setInteractive({ useHandCursor: true });
+
+    check.on("pointerup", () => {
+      void this.runCheck();
+    });
+  }
+
+  private undoLastMove(): void {
+    const item = this.moveStack.pop();
+    if (!item) {
+      return;
+    }
+    this.returnToTray(item, false);
   }
 
   private onDragStart(
     pointer: Phaser.Input.Pointer,
     gameObject: Phaser.GameObjects.GameObject,
   ): void {
-    if (!(gameObject instanceof ItemSprite)) {
+    if (!(gameObject instanceof ItemSprite) || this.levelComplete) {
       return;
     }
 
-    const parent = gameObject.parentContainer;
-    const nestedParent = parent?.parentContainer;
-    if (parent instanceof Shelf) {
-      parent.removeItem(gameObject);
-    } else if (nestedParent instanceof Shelf) {
-      nestedParent.removeItem(gameObject);
-    } else {
-      for (const shelf of this.shelves) {
-        if (shelf.items.includes(gameObject)) {
-          shelf.removeItem(gameObject);
-        }
+    for (const shelf of this.shelves) {
+      if (shelf.items.includes(gameObject)) {
+        shelf.removeItem(gameObject);
       }
     }
+    this.trayItems = this.trayItems.filter((item) => item !== gameObject);
 
     gameObject.setDepth(1000);
     this.draggedItem = gameObject;
@@ -169,14 +211,7 @@ export class GameScene extends Phaser.Scene {
       x: gameObject.x - pointer.x,
       y: gameObject.y - pointer.y,
     };
-
-    this.tweens.killTweensOf(gameObject);
-    this.tweens.add({
-      targets: gameObject,
-      scale: 1.08,
-      duration: 100,
-      ease: "Sine.easeOut",
-    });
+    gameObject.playPickup();
   }
 
   private onDrag(
@@ -200,55 +235,78 @@ export class GameScene extends Phaser.Scene {
     }
 
     const itemBounds = gameObject.getDropBounds();
-    let placed = false;
+    const onTray =
+      Phaser.Geom.Rectangle.Overlaps(itemBounds, this.trayBounds) ||
+      Phaser.Geom.Rectangle.Contains(this.trayBounds, pointer.x, pointer.y);
 
+    if (onTray) {
+      this.returnToTray(gameObject, true);
+      gameObject.setDepth(10);
+      this.draggedItem = null;
+      return;
+    }
+
+    let placed = false;
     for (const shelf of this.shelves) {
       const dropBounds = shelf.getDropBounds();
       const hitsShelf =
         Phaser.Geom.Rectangle.Overlaps(itemBounds, dropBounds) ||
         Phaser.Geom.Rectangle.Contains(dropBounds, pointer.x, pointer.y);
-
       if (!hitsShelf) {
         continue;
       }
-
       if (shelf.addItem(gameObject)) {
         placed = true;
-        this.tweens.add({
-          targets: gameObject,
-          scale: 1,
-          duration: 80,
-          ease: "Sine.easeOut",
-        });
+        if (!this.moveStack.includes(gameObject)) {
+          this.moveStack.push(gameObject);
+        }
+        this.relayoutTray();
         break;
       }
     }
 
     if (!placed) {
-      gameObject.resetToHome();
+      this.returnToTray(gameObject, true);
     }
 
     gameObject.setDepth(10);
     this.draggedItem = null;
-    this.checkLevelComplete();
   }
 
-  private checkLevelComplete(): void {
-    if (this.levelComplete) {
+  private async runCheck(): Promise<void> {
+    if (this.levelComplete || !this.level) {
       return;
     }
-    if (!this.shelves.every((shelf) => shelf.isFull())) {
+
+    this.shelves.forEach((shelf) => shelf.setError(false));
+
+    const incomplete = this.shelves.some((shelf) => !shelf.isFull());
+    const wrong = this.shelves.filter((shelf) => shelf.hasWrongItems());
+
+    if (incomplete || wrong.length > 0 || this.trayItems.length > 0) {
+      this.failedChecks += 1;
+      wrong.forEach((shelf) => shelf.setError(true));
+      this.cameras.main.shake(220, 0.008);
       return;
     }
 
     this.levelComplete = true;
     this.input.enabled = false;
 
+    const stars = this.failedChecks === 0 ? 3 : this.failedChecks === 1 ? 2 : 1;
+    const progression = this.registry.get("progression") as Progression | undefined;
+    if (progression) {
+      await progression.recordLevelComplete(this.level.id, this.levelIndex, stars);
+    }
+
     const gateway = this.registry.get("gateway") as PlatformGateway | undefined;
     gateway?.gameplayStop();
 
-    this.time.delayedCall(400, () => {
-      this.scene.start("GameOver", { levelIndex: this.levelIndex });
+    this.time.delayedCall(350, () => {
+      this.scene.start("GameOver", {
+        levelIndex: this.levelIndex,
+        stars,
+      });
     });
   }
 

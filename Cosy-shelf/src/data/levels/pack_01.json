@@ -6,16 +6,58 @@
       "chapter": 1,
       "rule": "color",
       "items": [
-        { "id": "l1-r1", "tag": "red", "label": "R1", "color": 14710870 },
-        { "id": "l1-r2", "tag": "red", "label": "R2", "color": 14710870 },
-        { "id": "l1-r3", "tag": "red", "label": "R3", "color": 14710870 },
-        { "id": "l1-b1", "tag": "blue", "label": "B1", "color": 7048863 },
-        { "id": "l1-b2", "tag": "blue", "label": "B2", "color": 7048863 },
-        { "id": "l1-b3", "tag": "blue", "label": "B3", "color": 7048863 }
+        {
+          "id": "l1-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l1-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l1-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l1-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l1-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l1-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        }
       ],
       "shelves": [
-        { "id": "l1-shelf-red", "accepts": "red", "slots": 3 },
-        { "id": "l1-shelf-blue", "accepts": "blue", "slots": 3 }
+        {
+          "id": "l1-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        },
+        {
+          "id": "l1-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l1-shelf-green",
+          "accepts": "green",
+          "slots": 1
+        },
+        {
+          "id": "l1-shelf-brown",
+          "accepts": "brown",
+          "slots": 1
+        }
       ]
     },
     {
@@ -23,39 +65,620 @@
       "chapter": 1,
       "rule": "color",
       "items": [
-        { "id": "l2-r1", "tag": "red", "label": "R1", "color": 14710870 },
-        { "id": "l2-r2", "tag": "red", "label": "R2", "color": 14710870 },
-        { "id": "l2-r3", "tag": "red", "label": "R3", "color": 14710870 },
-        { "id": "l2-r4", "tag": "red", "label": "R4", "color": 14710870 },
-        { "id": "l2-b1", "tag": "blue", "label": "B1", "color": 7048863 },
-        { "id": "l2-b2", "tag": "blue", "label": "B2", "color": 7048863 },
-        { "id": "l2-b3", "tag": "blue", "label": "B3", "color": 7048863 },
-        { "id": "l2-b4", "tag": "blue", "label": "B4", "color": 7048863 }
+        {
+          "id": "l2-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l2-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l2-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l2-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l2-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l2-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l2-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l2-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        }
       ],
       "shelves": [
-        { "id": "l2-shelf-red", "accepts": "red", "slots": 4 },
-        { "id": "l2-shelf-blue", "accepts": "blue", "slots": 4 }
+        {
+          "id": "l2-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l2-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l2-shelf-brown",
+          "accepts": "brown",
+          "slots": 2
+        },
+        {
+          "id": "l2-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        }
       ]
     },
     {
       "id": 3,
       "chapter": 1,
-      "rule": "type",
+      "rule": "color",
       "items": [
-        { "id": "l3-book-1", "tag": "book", "label": "B1", "color": 10908754 },
-        { "id": "l3-book-2", "tag": "book", "label": "B2", "color": 10908754 },
-        { "id": "l3-book-3", "tag": "book", "label": "B3", "color": 10908754 },
-        { "id": "l3-cup-1", "tag": "cup", "label": "C1", "color": 7048863 },
-        { "id": "l3-cup-2", "tag": "cup", "label": "C2", "color": 7048863 },
-        { "id": "l3-cup-3", "tag": "cup", "label": "C3", "color": 7048863 },
-        { "id": "l3-plant-1", "tag": "plant", "label": "P1", "color": 9414774 },
-        { "id": "l3-plant-2", "tag": "plant", "label": "P2", "color": 9414774 },
-        { "id": "l3-plant-3", "tag": "plant", "label": "P3", "color": 9414774 }
+        {
+          "id": "l3-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l3-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l3-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l3-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l3-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l3-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l3-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l3-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        }
       ],
       "shelves": [
-        { "id": "l3-shelf-book", "accepts": "book", "slots": 3 },
-        { "id": "l3-shelf-cup", "accepts": "cup", "slots": 3 },
-        { "id": "l3-shelf-plant", "accepts": "plant", "slots": 3 }
+        {
+          "id": "l3-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l3-shelf-brown",
+          "accepts": "brown",
+          "slots": 2
+        },
+        {
+          "id": "l3-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        },
+        {
+          "id": "l3-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l4-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l4-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l4-brown-3",
+          "tag": "brown",
+          "sprite": "brown_3"
+        },
+        {
+          "id": "l4-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l4-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l4-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l4-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l4-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l4-shelf-brown",
+          "accepts": "brown",
+          "slots": 3
+        },
+        {
+          "id": "l4-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        },
+        {
+          "id": "l4-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l4-shelf-green",
+          "accepts": "green",
+          "slots": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l5-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l5-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l5-red-3",
+          "tag": "red",
+          "sprite": "red_3"
+        },
+        {
+          "id": "l5-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l5-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l5-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l5-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l5-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l5-shelf-red",
+          "accepts": "red",
+          "slots": 3
+        },
+        {
+          "id": "l5-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l5-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l5-shelf-brown",
+          "accepts": "brown",
+          "slots": 1
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l6-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l6-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l6-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l6-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l6-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l6-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l6-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l6-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l6-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l6-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l6-shelf-brown",
+          "accepts": "brown",
+          "slots": 2
+        },
+        {
+          "id": "l6-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l7-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l7-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l7-green-3",
+          "tag": "green",
+          "sprite": "green_3"
+        },
+        {
+          "id": "l7-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l7-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l7-brown-3",
+          "tag": "brown",
+          "sprite": "brown_3"
+        },
+        {
+          "id": "l7-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l7-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l7-shelf-green",
+          "accepts": "green",
+          "slots": 3
+        },
+        {
+          "id": "l7-shelf-brown",
+          "accepts": "brown",
+          "slots": 3
+        },
+        {
+          "id": "l7-shelf-red",
+          "accepts": "red",
+          "slots": 1
+        },
+        {
+          "id": "l7-shelf-blue",
+          "accepts": "blue",
+          "slots": 1
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l8-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l8-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l8-brown-3",
+          "tag": "brown",
+          "sprite": "brown_3"
+        },
+        {
+          "id": "l8-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l8-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l8-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l8-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l8-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l8-shelf-brown",
+          "accepts": "brown",
+          "slots": 3
+        },
+        {
+          "id": "l8-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        },
+        {
+          "id": "l8-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l8-shelf-green",
+          "accepts": "green",
+          "slots": 1
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l9-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        },
+        {
+          "id": "l9-red-2",
+          "tag": "red",
+          "sprite": "red_2"
+        },
+        {
+          "id": "l9-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l9-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l9-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l9-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l9-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l9-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l9-shelf-red",
+          "accepts": "red",
+          "slots": 2
+        },
+        {
+          "id": "l9-shelf-blue",
+          "accepts": "blue",
+          "slots": 2
+        },
+        {
+          "id": "l9-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l9-shelf-brown",
+          "accepts": "brown",
+          "slots": 2
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "chapter": 1,
+      "rule": "color",
+      "items": [
+        {
+          "id": "l10-blue-1",
+          "tag": "blue",
+          "sprite": "blue_1"
+        },
+        {
+          "id": "l10-blue-2",
+          "tag": "blue",
+          "sprite": "blue_2"
+        },
+        {
+          "id": "l10-blue-3",
+          "tag": "blue",
+          "sprite": "blue_3"
+        },
+        {
+          "id": "l10-green-1",
+          "tag": "green",
+          "sprite": "green_1"
+        },
+        {
+          "id": "l10-green-2",
+          "tag": "green",
+          "sprite": "green_2"
+        },
+        {
+          "id": "l10-brown-1",
+          "tag": "brown",
+          "sprite": "brown_1"
+        },
+        {
+          "id": "l10-brown-2",
+          "tag": "brown",
+          "sprite": "brown_2"
+        },
+        {
+          "id": "l10-red-1",
+          "tag": "red",
+          "sprite": "red_1"
+        }
+      ],
+      "shelves": [
+        {
+          "id": "l10-shelf-blue",
+          "accepts": "blue",
+          "slots": 3
+        },
+        {
+          "id": "l10-shelf-green",
+          "accepts": "green",
+          "slots": 2
+        },
+        {
+          "id": "l10-shelf-brown",
+          "accepts": "brown",
+          "slots": 2
+        },
+        {
+          "id": "l10-shelf-red",
+          "accepts": "red",
+          "slots": 1
+        }
       ]
     }
   ]

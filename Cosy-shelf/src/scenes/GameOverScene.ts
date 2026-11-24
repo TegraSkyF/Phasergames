@@ -1,32 +1,45 @@
 import Phaser from "phaser";
 import { LevelManager } from "../systems/LevelManager";
+import type { Progression } from "../systems/Progression";
 
 export class GameOverScene extends Phaser.Scene {
   private levelIndex = 0;
+  private stars = 1;
 
   constructor() {
     super({ key: "GameOver" });
   }
 
-  init(data?: { levelIndex?: number }): void {
+  init(data?: { levelIndex?: number; stars?: number }): void {
     this.levelIndex = data?.levelIndex ?? 0;
+    this.stars = data?.stars ?? 1;
   }
 
   create(): void {
     const { width, height } = this.scale;
     const total = new LevelManager().getTotalLevels();
+    const progression = this.registry.get("progression") as Progression | undefined;
     const nextIndex = this.levelIndex + 1;
-    const hasNext = nextIndex < total;
+    const hasNext =
+      nextIndex < total && (progression?.isUnlocked(nextIndex) ?? true);
 
     this.add
-      .text(width / 2, height / 2 - 200, "Уровень пройден!", {
+      .text(width / 2, height / 2 - 220, "Уровень пройден!", {
         fontFamily: "Georgia, serif",
-        fontSize: "48px",
+        fontSize: "44px",
         color: "#f4efe6",
       })
       .setOrigin(0.5);
 
-    let y = height / 2 - 40;
+    this.add
+      .text(width / 2, height / 2 - 140, "★".repeat(this.stars) + "☆".repeat(3 - this.stars), {
+        fontFamily: "Georgia, serif",
+        fontSize: "48px",
+        color: "#d9b85c",
+      })
+      .setOrigin(0.5);
+
+    let y = height / 2 - 20;
 
     if (hasNext) {
       const next = this.add

@@ -1,10 +1,11 @@
 import pack01 from "../data/levels/pack_01.json";
+import pack02 from "../data/levels/pack_02.json";
+import pack03 from "../data/levels/pack_03.json";
 
 export interface LevelItemConfig {
   id: string;
   tag: string;
-  label: string;
-  color: number;
+  sprite: string;
 }
 
 export interface LevelShelfConfig {
@@ -30,8 +31,9 @@ export class LevelManager {
   private levels: LevelConfig[] = [];
 
   constructor() {
-    // TODO(iter 10): заменить на fetch / Yandex Remote Config для live-ops.
     this.registerPack(pack01 as LevelPack);
+    this.registerPack(pack02 as LevelPack);
+    this.registerPack(pack03 as LevelPack);
   }
 
   registerPack(pack: LevelPack): void {

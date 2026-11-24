@@ -1,5 +1,8 @@
 import type { Save, SaveData } from "./Save";
 
+/** Temporary: every level is playable from the menu. Turn off before ship. */
+export const UNLOCK_ALL_LEVELS = true;
+
 export class Progression {
   private data: SaveData = { stars: {}, unlockedMaxIndex: 0 };
 
@@ -10,6 +13,9 @@ export class Progression {
   }
 
   isUnlocked(index: number): boolean {
+    if (UNLOCK_ALL_LEVELS) {
+      return true;
+    }
     return index <= this.data.unlockedMaxIndex;
   }
 

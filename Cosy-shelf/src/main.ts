@@ -4,6 +4,7 @@ import { GameOverScene } from "./scenes/GameOverScene";
 import { GameScene } from "./scenes/GameScene";
 import { HUDScene } from "./scenes/HUDScene";
 import { MenuScene } from "./scenes/MenuScene";
+import { PauseScene } from "./scenes/PauseScene";
 import { PreloadScene } from "./scenes/PreloadScene";
 
 new Phaser.Game({
@@ -12,7 +13,15 @@ new Phaser.Game({
   width: 720,
   height: 1280,
   backgroundColor: "#2b241c",
-  scene: [BootScene, PreloadScene, MenuScene, GameScene, HUDScene, GameOverScene],
+  scene: [
+    BootScene,
+    PreloadScene,
+    MenuScene,
+    GameScene,
+    HUDScene,
+    PauseScene,
+    GameOverScene,
+  ],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

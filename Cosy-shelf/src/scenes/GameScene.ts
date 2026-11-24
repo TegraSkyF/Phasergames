@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import type { PlatformGateway } from "../platform/PlatformGateway";
 import { LevelManager, type LevelConfig } from "../systems/LevelManager";
 import type { Progression } from "../systems/Progression";
+import { Button } from "../ui/Button";
 import { ItemSprite } from "../ui/ItemSprite";
 import { Shelf } from "../ui/Shelf";
 
@@ -16,8 +17,10 @@ export class GameScene extends Phaser.Scene {
   private moveStack: ItemSprite[] = [];
   private draggedItem: ItemSprite | null = null;
   private dragOffset = { x: 0, y: 0 };
-  private levelComplete = false;
+  private levelFinished = false;
   private failedChecks = 0;
+  private elapsedSeconds = 0;
+  private lastEmittedSecond = -1;
   private levelIndex = 0;
   private level: LevelConfig | null = null;
   private trayBounds = new Phaser.Geom.Rectangle(0, TRAY_Y, 720, TRAY_HEIGHT);
@@ -36,8 +39,10 @@ export class GameScene extends Phaser.Scene {
     this.trayItems = [];
     this.moveStack = [];
     this.draggedItem = null;
-    this.levelComplete = false;
+    this.levelFinished = false;
     this.failedChecks = 0;
+    this.elapsedSeconds = 0;
+    this.lastEmittedSecond = -1;
     this.input.enabled = true;
 
     const gateway = this.registry.get("gateway") as PlatformGateway;
@@ -64,13 +69,22 @@ export class GameScene extends Phaser.Scene {
     this.input.on("drag", this.onDrag, this);
     this.input.on("dragend", this.onDragEnd, this);
 
-    const startedAt = Date.now();
-    this.scene.launch("HUDScene", {
-      levelId: this.level.id,
-      startedAt,
-    });
+    this.scene.launch("HUDScene", { levelId: this.level.id });
     this.scene.bringToTop("HUDScene");
+    this.game.events.emit("hud-timer", 0);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.handleShutdown, this);
+  }
+
+  update(_time: number, delta: number): void {
+    if (this.levelFinished || this.scene.isPaused()) {
+      return;
+    }
+    this.elapsedSeconds += delta / 1000;
+    const seconds = Math.floor(this.elapsedSeconds);
+    if (seconds !== this.lastEmittedSecond) {
+      this.lastEmittedSecond = seconds;
+      this.game.events.emit("hud-timer", seconds);
+    }
   }
 
   private layoutShelves(): void {
@@ -151,35 +165,33 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createTrayButtons(): void {
-    const undo = this.add
-      .text(28, 1252, "Undo", {
-        fontFamily: "Georgia, serif",
-        fontSize: "24px",
-        color: "#5A4632",
-        backgroundColor: "#e8dcc0",
-        padding: { x: 16, y: 10 },
-      })
-      .setOrigin(0, 0.5)
-      .setDepth(1500)
-      .setInteractive({ useHandCursor: true });
+    const undo = new Button(
+      this,
+      90,
+      1252,
+      140,
+      56,
+      "Undo",
+      0xe8dcc0,
+      0x5a4632,
+      () => this.undoLastMove(),
+    );
+    undo.setDepth(1500);
 
-    undo.on("pointerup", () => this.undoLastMove());
-
-    const check = this.add
-      .text(692, 1252, "Check", {
-        fontFamily: "Georgia, serif",
-        fontSize: "24px",
-        color: "#f5ebda",
-        backgroundColor: "#5a8f62",
-        padding: { x: 16, y: 10 },
-      })
-      .setOrigin(1, 0.5)
-      .setDepth(1500)
-      .setInteractive({ useHandCursor: true });
-
-    check.on("pointerup", () => {
-      void this.runCheck();
-    });
+    const check = new Button(
+      this,
+      630,
+      1252,
+      140,
+      56,
+      "Check",
+      0x8fa876,
+      0xf5ebda,
+      () => {
+        void this.runCheck();
+      },
+    );
+    check.setDepth(1500);
   }
 
   private undoLastMove(): void {
@@ -194,7 +206,7 @@ export class GameScene extends Phaser.Scene {
     pointer: Phaser.Input.Pointer,
     gameObject: Phaser.GameObjects.GameObject,
   ): void {
-    if (!(gameObject instanceof ItemSprite) || this.levelComplete) {
+    if (!(gameObject instanceof ItemSprite) || this.levelFinished) {
       return;
     }
 
@@ -274,7 +286,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private async runCheck(): Promise<void> {
-    if (this.levelComplete || !this.level) {
+    if (this.levelFinished || !this.level) {
       return;
     }
 
@@ -290,11 +302,12 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    this.levelComplete = true;
+    this.levelFinished = true;
     this.input.enabled = false;
 
-    const stars = this.failedChecks === 0 ? 3 : this.failedChecks === 1 ? 2 : 1;
+    const stars = this.calcStars();
     const progression = this.registry.get("progression") as Progression | undefined;
+    const prevStars = progression?.getStars(this.level.id) ?? 0;
     if (progression) {
       await progression.recordLevelComplete(this.level.id, this.levelIndex, stars);
     }
@@ -302,12 +315,22 @@ export class GameScene extends Phaser.Scene {
     const gateway = this.registry.get("gateway") as PlatformGateway | undefined;
     gateway?.gameplayStop();
 
+    const timeSeconds = Math.floor(this.elapsedSeconds);
+    this.scene.stop("HUDScene");
     this.time.delayedCall(350, () => {
       this.scene.start("GameOver", {
         levelIndex: this.levelIndex,
         stars,
+        prevStars,
+        timeSeconds,
       });
     });
+  }
+
+  private calcStars(): number {
+    const baseStars = this.failedChecks === 0 ? 2 : this.failedChecks <= 2 ? 1 : 0;
+    const timeBonus = this.elapsedSeconds < 60 ? 1 : 0;
+    return Math.min(3, Math.max(1, baseStars + timeBonus));
   }
 
   private handleShutdown(): void {
@@ -318,5 +341,6 @@ export class GameScene extends Phaser.Scene {
     const gateway = this.registry.get("gateway") as PlatformGateway | undefined;
     gateway?.gameplayStop();
     this.scene.stop("HUDScene");
+    this.scene.stop("PauseScene");
   }
 }

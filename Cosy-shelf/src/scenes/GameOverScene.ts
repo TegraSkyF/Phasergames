@@ -1,92 +1,113 @@
 import Phaser from "phaser";
 import { LevelManager } from "../systems/LevelManager";
-import type { Progression } from "../systems/Progression";
+import { Button } from "../ui/Button";
+
+function formatClock(seconds: number): string {
+  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const ss = String(seconds % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
+}
 
 export class GameOverScene extends Phaser.Scene {
   private levelIndex = 0;
   private stars = 1;
+  private prevStars = 0;
+  private timeSeconds = 0;
 
   constructor() {
     super({ key: "GameOver" });
   }
 
-  init(data?: { levelIndex?: number; stars?: number }): void {
+  init(data?: {
+    levelIndex?: number;
+    stars?: number;
+    prevStars?: number;
+    timeSeconds?: number;
+  }): void {
     this.levelIndex = data?.levelIndex ?? 0;
     this.stars = data?.stars ?? 1;
+    this.prevStars = data?.prevStars ?? 0;
+    this.timeSeconds = data?.timeSeconds ?? 0;
   }
 
   create(): void {
-    const { width, height } = this.scale;
     const total = new LevelManager().getTotalLevels();
-    const progression = this.registry.get("progression") as Progression | undefined;
     const nextIndex = this.levelIndex + 1;
-    const hasNext =
-      nextIndex < total && (progression?.isUnlocked(nextIndex) ?? true);
+    const hasNext = nextIndex < total;
+
+    const bg = this.add.graphics();
+    bg.fillStyle(0xf5ebda, 1);
+    bg.fillRect(0, 0, 720, 1280);
 
     this.add
-      .text(width / 2, height / 2 - 220, "Уровень пройден!", {
+      .text(360, 200, "Уровень пройден!", {
         fontFamily: "Georgia, serif",
-        fontSize: "44px",
-        color: "#f4efe6",
+        fontSize: "40px",
+        fontStyle: "bold",
+        color: "#5A4632",
       })
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height / 2 - 140, "★".repeat(this.stars) + "☆".repeat(3 - this.stars), {
+      .text(360, 280, `Время: ${formatClock(this.timeSeconds)}`, {
         fontFamily: "Georgia, serif",
-        fontSize: "48px",
-        color: "#d9b85c",
+        fontSize: "24px",
+        color: "#8FA876",
       })
       .setOrigin(0.5);
 
-    let y = height / 2 - 20;
+    const starXs = [240, 360, 480];
+    starXs.forEach((x, index) => {
+      this.drawStar(x, 400, index < this.stars);
+    });
 
-    if (hasNext) {
-      const next = this.add
-        .text(width / 2, y, "Следующий уровень", {
+    if (this.stars > this.prevStars) {
+      this.add
+        .text(360, 520, "Новый рекорд!", {
           fontFamily: "Georgia, serif",
-          fontSize: "32px",
-          color: "#2b241c",
-          backgroundColor: "#e7d3b0",
-          padding: { x: 36, y: 14 },
+          fontSize: "28px",
+          fontStyle: "bold",
+          color: "#E07856",
         })
-        .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true });
-
-      next.on("pointerup", () => {
-        this.scene.start("Game", { levelIndex: nextIndex });
-      });
-      y += 100;
+        .setOrigin(0.5);
     }
 
-    const retry = this.add
-      .text(width / 2, y, "Retry", {
-        fontFamily: "Georgia, serif",
-        fontSize: "32px",
-        color: "#2b241c",
-        backgroundColor: "#d4c4a8",
-        padding: { x: 36, y: 14 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
+    if (hasNext) {
+      new Button(this, 360, 700, 360, 72, "Дальше", 0xa67c52, 0xf5ebda, () => {
+        this.scene.start("Game", { levelIndex: nextIndex });
+      });
+    }
 
-    retry.on("pointerup", () => {
-      this.scene.start("Game", { levelIndex: this.levelIndex ?? 0 });
+    new Button(this, 360, 800, 360, 72, "Ещё раз", 0xe8dcc0, 0x5a4632, () => {
+      this.scene.start("Game", { levelIndex: this.levelIndex });
     });
 
-    const menu = this.add
-      .text(width / 2, y + 100, "Menu", {
-        fontFamily: "Georgia, serif",
-        fontSize: "32px",
-        color: "#2b241c",
-        backgroundColor: "#cbbba0",
-        padding: { x: 36, y: 14 },
-      })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
-
-    menu.on("pointerup", () => {
+    new Button(this, 360, 900, 360, 72, "В меню", 0xd9c7a8, 0x5a4632, () => {
       this.scene.start("Menu");
     });
+  }
+
+  private drawStar(cx: number, cy: number, filled: boolean): void {
+    const g = this.add.graphics();
+    const color = filled ? 0xd9b85c : 0xd9c7a8;
+    const outer = 50;
+    const inner = 22;
+    g.fillStyle(color, 1);
+    g.lineStyle(3, 0x5a4632, 1);
+    g.beginPath();
+    for (let i = 0; i < 10; i += 1) {
+      const radius = i % 2 === 0 ? outer : inner;
+      const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+      const x = cx + Math.cos(angle) * radius;
+      const y = cy + Math.sin(angle) * radius;
+      if (i === 0) {
+        g.moveTo(x, y);
+      } else {
+        g.lineTo(x, y);
+      }
+    }
+    g.closePath();
+    g.fillPath();
+    g.strokePath();
   }
 }

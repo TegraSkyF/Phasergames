@@ -4,7 +4,13 @@ import type { Save, SaveData } from "./Save";
 export const UNLOCK_ALL_LEVELS = true;
 
 export class Progression {
-  private data: SaveData = { stars: {}, unlockedMaxIndex: 0 };
+  private data: SaveData = {
+    stars: {},
+    unlockedMaxIndex: 0,
+    feathers: 0,
+    interstitialCount: 0,
+  };
+  private persistQueue: Promise<void> = Promise.resolve();
 
   constructor(private readonly save: Save) {}
 
@@ -27,6 +33,19 @@ export class Progression {
     return this.data.unlockedMaxIndex;
   }
 
+  getFeathers(): number {
+    return this.data.feathers;
+  }
+
+  addFeathers(amount: number): void {
+    this.data.feathers += amount;
+    void this.persist();
+  }
+
+  getLevelReward(levelIndex: number): number {
+    return 10 + levelIndex * 2;
+  }
+
   async recordLevelComplete(
     levelId: number,
     index: number,
@@ -36,6 +55,18 @@ export class Progression {
     const previous = this.data.stars[key] ?? 0;
     this.data.stars[key] = Math.max(previous, stars);
     this.data.unlockedMaxIndex = Math.max(this.data.unlockedMaxIndex, index + 1);
-    await this.save.saveProgress(this.data);
+    await this.persist();
+  }
+
+  private persist(): Promise<void> {
+    this.persistQueue = this.persistQueue.then(async () => {
+      const latest = await this.save.loadProgress();
+      this.data.interstitialCount = Math.max(
+        this.data.interstitialCount,
+        latest.interstitialCount,
+      );
+      await this.save.saveProgress(this.data);
+    });
+    return this.persistQueue;
   }
 }
